@@ -1,0 +1,16 @@
+{
+  "name": "shared-server-match-api",
+  "version": "0.0.1",
+  "description": "Admin users and interests in Match Applicaction.",
+  "main": "index.js",
+  "keywords": [
+    "swagger"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "connect": "^3.2.0",
+    "js-yaml": "^3.3.0",
+    "swagger-tools": "0.9.*"
+  }
+}

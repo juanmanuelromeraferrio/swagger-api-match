@@ -1,0 +1,256 @@
+---
+swagger: "2.0"
+info:
+  description: "Admin users and interests in Match Applicaction."
+  version: "0.0.1"
+  title: "Shared Server Match API"
+host: "shared-server-match.herokuapp.com"
+schemes:
+- "https"
+produces:
+- "application/json"
+paths:
+  /interests:
+    get:
+      tags:
+      - "Interest"
+      description: "Gets `Interest` objects.\n"
+      operationId: "interestsGET"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "An array of interests"
+          schema:
+            $ref: "#/definitions/Interest"
+      x-swagger-router-controller: "Interest"
+    post:
+      tags:
+      - "Interest"
+      description: "Create a new `Interest` object.\n"
+      operationId: "interestsPOST"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "interest"
+        description: "Interest to add to the db"
+        required: true
+        schema:
+          $ref: "#/definitions/Interest"
+      responses:
+        200:
+          description: "Insert OK"
+        400:
+          description: "Bad Request. Intrest already exists."
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Interest"
+  /users:
+    get:
+      tags:
+      - "User"
+      description: "Gets `Users` objects.\n"
+      operationId: "usersGET"
+      parameters: []
+      responses:
+        200:
+          description: "An array of users"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+      x-swagger-router-controller: "User"
+    post:
+      tags:
+      - "User"
+      description: "Creates a new `User`\n"
+      operationId: "usersPOST"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "user"
+        description: "User to add to the db"
+        required: true
+        schema:
+          $ref: "#/definitions/NewUser"
+      responses:
+        200:
+          description: "User response"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/Error"
+        404:
+          description: "Interest Not Found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "User"
+  /users/{id}:
+    get:
+      tags:
+      - "User"
+      description: "Gets `User` object by id.\n"
+      operationId: "usersIdGET"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id of user"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "User information"
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: "User not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "User"
+    put:
+      tags:
+      - "User"
+      description: "Update `User` object by id.\n"
+      operationId: "usersIdPUT"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id of user"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "user"
+        description: "User to update"
+        required: true
+        schema:
+          $ref: "#/definitions/NewUser"
+      responses:
+        200:
+          description: "User response"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/Error"
+        404:
+          description: "Interest or User not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "User"
+    delete:
+      tags:
+      - "User"
+      description: "Delete `User` object by id.\n"
+      operationId: "usersIdDELETE"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id of user"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Delete OK"
+        404:
+          description: "User not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "User"
+definitions:
+  User:
+    type: "object"
+    properties:
+      user:
+        $ref: "#/definitions/User_user"
+  NewUser:
+    type: "object"
+    properties:
+      user:
+        $ref: "#/definitions/NewUser_user"
+  Interest:
+    type: "object"
+    properties:
+      interest:
+        $ref: "#/definitions/Interest_interest"
+  AddInterest:
+    type: "object"
+    properties:
+      category:
+        type: "string"
+        description: "Category of interest"
+      value:
+        type: "string"
+        description: "Value of interest"
+  Error:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+      data:
+        type: "string"
+  User_user_location:
+    properties:
+      latitude:
+        type: "string"
+      longitude:
+        type: "string"
+    description: "Location of user."
+  User_user:
+    properties:
+      name:
+        type: "string"
+        description: "Name of user."
+      alias:
+        type: "string"
+        description: "Alias of user."
+      photo:
+        type: "string"
+        description: "Profile picture in base64 format."
+      location:
+        $ref: "#/definitions/User_user_location"
+      id:
+        type: "string"
+        description: "Unique identifier representing a specific user."
+      interests:
+        type: "array"
+        items:
+          $ref: "#/definitions/Interest"
+      email:
+        type: "string"
+        description: "Email of user."
+  NewUser_user:
+    properties:
+      name:
+        type: "string"
+        description: "Name of user."
+      alias:
+        type: "string"
+        description: "Alias of user."
+      photo:
+        type: "string"
+        description: "Profile picture in base64 format."
+      location:
+        $ref: "#/definitions/User_user_location"
+      interests:
+        type: "array"
+        items:
+          $ref: "#/definitions/AddInterest"
+      email:
+        type: "string"
+        description: "Email of user."
+  Interest_interest:
+    properties:
+      category:
+        type: "string"
+        description: "Category of interest"
+      value:
+        type: "string"
+        description: "Value of interest"
